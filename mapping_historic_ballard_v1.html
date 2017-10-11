@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiY29yZS1naXMiLCJhIjoiaUxqQS1zQSJ9.mDT5nb8l_dWIHzbnOTebcQ';
+
+//set bounds to Ballard
+var bounds = [
+		[-122.459707,47.648043], // southwest coords
+		[-122.303753,47.705257] // northeast coords
+	];	
+
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/core-gis/cj7uz1y492rny2so56e1jbkds', // stylesheet location
+    center: [-122.3855,47.6809], // starting position [lng, lat]
+    zoom: 14, // starting zoom
+	maxBounds:  bounds // sets bounds as max
+	
+});
+
+map.addSource('parcels',{
+	type:'vector',
+	url:'mapbox://core-gis.burv2shi'
+	}
+	//Add a map layer for all the parcels
+	map.addLayer({
+		"id":"parcel_lines",
+		"type":"line",
+		"source":"parcels",
+		"source-layer":"mhb_03_14_16_ATTRIBUTES_v3_ME-4ehmg6",
+		"layout":{		},
+		"paint":{
+			"line-color":"#999999",
+			"line-wideth":2
+			}	
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.40.1/mapbox-gl.css' rel='stylesheet' />
+	<link href="css/mapping-historic-ballard-style.css" rel="stylesheet">
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+		.mapboxgl-popup {
+		max-width: 400px;
+		font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<div class='legend'>
+	<div class='legend-title'>Mapping Historic Ballard Inventory</div>
+		<div class='legend-scale'>
+			  <ul class='legend-labels'>
+				<li><span style='background:#a80000;'></span>Select 150 Buildings</li>
+				<li><span style='background:#ff7f7f;'></span>Select 150 Parcels</li>
+				<li><span style='background:#5e6ea6;'></span>Vintage 500 Buildings</li>
+				<li><span style='background:#bee8ff;'></span>Vintage 500 Parcels</li>
+				<li><span style='background:#c9e6b5;'></span>Other Surveyed Buildings</li>
+				<li><span style='background:#ddfec6;'></span>Other Surveyed Parcels</li>
+				<li><span style='outline:#594;'></span>Survey Sectors</li>
+			  </ul>
+		</div>	  
+		<div class='legend-source'>Source: <a href="http://ballardhistory.org/"  target="_blank">Mapping Historic Ballard Project</a></div>
+		<div class='map-credit'>Map design by <a href="http://www.coregis.net/"  target="_blank">CORE GIS</a></div>
+	</div>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiY29yZS1naXMiLCJhIjoiaUxqQS1zQSJ9.mDT5nb8l_dWIHzbnOTebcQ';
+
+//set bounds to Ballard
+var bounds = [
+		[-122.459707,47.648043], // southwest coords
+		[-122.303753,47.705257] // northeast coords
+	];	
+
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/core-gis/cj7uz1y492rny2so56e1jbkds', // stylesheet location
+    center: [-122.3855,47.6809], // starting position [lng, lat]
+    zoom: 14, // starting zoom
+	maxBounds:  bounds // sets bounds as max
+	
+});
+
+map.on('load', function () {
+
+	map.addSource('parcels',{
+		type:'vector',
+		url:'mapbox://core-gis.burv2shi'
+		});
+		//Add a map layer for all the parcels
+
+	map.addLayer({
+		"id":"parcel_lines",
+		"type":"fill",
+		"source":"parcels",
+		"source-layer":"mhb_03_14_16_ATTRIBUTES_v3_ME-4ehmg6",
+		"layout":{		},
+		"paint":{
+			'fill-color': 'rgba(200, 100, 240, 0)',
+            'fill-outline-color': 'rgba(200, 100, 240, 0)'
+			}	
+	});
+});
+
+// When a click event occurs on a feature in the states layer, open a popup at the
+    // location of the click, with description HTML from its properties.
+    map.on('click', 'parcel_lines', function (e) {
+        new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(fillpopup(e.features[0].properties))
+            .addTo(map);
+		console.log(e.features[0].properties);
+    });
+	
+	 // Change the cursor to a pointer when the mouse is over the states layer.
+    map.on('mouseenter', 'parcel_lines', function () {
+        map.getCanvas().style.cursor = 'pointer';
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on('mouseleave', 'parcel_lines', function () {
+        map.getCanvas().style.cursor = '';
+    });
+	
+	function fillpopup(data){
+		var html = "";
+		html = html + "<img src='http://res.cloudinary.com/core-gis/image/upload/" + data.Photo_1 + ".jpg' class='popupimage' alt='Photo of this property'>"
+		html = html + "<br>"
+		html = html + "<span class='varname'>Category: </span> <span class='attribute'>" + data.Webmap_Cat + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Address: </span> <span class='attribute'>" + data.address_su + " " + data.address_th +"</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Year Built: </span> <span class='attribute'>" + data.Year_Built + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Building Type: </span> <span class='attribute'>" + data.building_t + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Number of Stories: </span> <span class='attribute'>" + data.Stories + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Cladding: </span> <span class='attribute'>" + data.cladding + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Roof Type: </span> <span class='attribute'>" + data.roof_type + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Roof Material: </span> <span class='attribute'>" + data.roof_mater + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Evaluation Category: </span> <span class='attribute'>" + data.evaluation + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Part of a Distrct? </span> <span class='attribute'>" + data.part_of_a_ + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Significant Trees? </span> <span class='attribute'>" + data.significan + "</span>";
+		return html;
+		//this will return the string to the calling function
+		
+	}
+
+</script>
+
+</body>
+</html>
