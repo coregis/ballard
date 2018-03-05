@@ -101,6 +101,8 @@ map.on('load', function () {
 		var html = "";
 		html = html + "<img src='http://ballardhistory.org/survey_photos/" + data.Photo_1 + ".jpg' class='popupimage' alt='Photo of this property'>"
 		html = html + "<br>"
+		html = html + "<span class='varname'>Unique ID: </span> <span class='attribute'>" + data.Unique_ID + "</span>";
+		html = html + "<br>"
 		html = html + "<span class='varname'>Category: </span> <span class='attribute'>" + data.Webmap_Cat + "</span>";
 		html = html + "<br>"
 		html = html + "<span class='varname'>Address: </span> <span class='attribute'>" + data.address_su + " " + data.address_th +"</span>";
