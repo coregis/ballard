@@ -124,6 +124,8 @@ map.on('load', function () {
 		html = html + "<span class='varname'>Part of a Distrct? </span> <span class='attribute'>" + data.part_of_a_ + "</span>";
 		html = html + "<br>"
 		html = html + "<span class='varname'>Significant Trees? </span> <span class='attribute'>" + data.significan + "</span>";
+		html = html + "<br>"
+		html = html + "<span class='varname'>Property History: </span> <span class='attribute'>" + "<a href=\"http://ballardhistory.org/property_sheets/" + data.one_pg_PDF+ "\" target=\"_blank\" title=\"Opens in a new window\">Click here (PDF link)</a>" + "</span>";
 		return html;
 		//this will return the string to the calling function
 		
