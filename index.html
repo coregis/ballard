@@ -87,7 +87,7 @@ map.on('load', function () {
 		console.log(e.features[0].properties);
     });
 	
-	 // Change the cursor to a pointer when the mouse is over the states layer.
+	 // Change the cursor to a pointer when the mouse is over the parcel layer.
     map.on('mouseenter', 'parcel_lines', function () {
         map.getCanvas().style.cursor = 'pointer';
     });
